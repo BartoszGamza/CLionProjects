@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/bartosz/CLionProjects/lab5/main.cpp
+iostream
+-
+string
+-
+sstream
+-
+algorithm
+-
+stdlib.h
+-
+cstdlib
+-
+limits.h
+-
+

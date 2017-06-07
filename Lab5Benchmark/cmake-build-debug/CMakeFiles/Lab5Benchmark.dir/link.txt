@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/Lab5Benchmark.dir/main.cpp.o  -o Lab5Benchmark 

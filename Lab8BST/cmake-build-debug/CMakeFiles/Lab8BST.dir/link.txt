@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/Lab8BST.dir/main.cpp.o  -o Lab8BST 

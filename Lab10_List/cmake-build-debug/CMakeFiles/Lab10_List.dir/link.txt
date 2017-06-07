@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/Lab10_List.dir/main.cpp.o  -o Lab10_List 
