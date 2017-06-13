@@ -1,39 +1,32 @@
-#include<iostream>
-#include<string.h>
+#include <iostream>
+#include <string.h>
 #include <sstream>
-
+#include <map>
+#include <list>
+#define INFINITY 10000000
 using namespace std;
 
-#define INFINITY 10000000
-
-struct Graph{
-    double * arr;
-    int vert;
+struct Vertice{
+    map < int, double > adjacency;
 };
 
-void insertEdge(Graph &g, int u, int v, double weight)
-{
-    g.arr[u*g.vert + v] = weight;
+struct Graph{
+    Vertice * vert;
+    int verts;
+};
+
+void insertEdge(Graph &g, int u, int v, double weight){
+    g.vert[u].adjacency[v] = weight;
+
 }
 
+void loadGraph(Graph &g, int n, int m){
+    g.verts = n;
+    g.vert = new Vertice[n];
+    Vertice * temp;
 
-void loadGraph(Graph &g, int n, int m)
-{
-    g.vert = n;
-    g.arr = new double[n*n];
-    for (int i = 0; i < n*n; i++)
-    {
-        if (i/g.vert == i% g.vert)
-            g.arr[i] = 0;
-        else
-            g.arr[i] = -1;
-
-    }
-
-    int u,w,v;
-
-    for (int i = 0; i < m; i++)
-    {
+    int u,v,w;
+    for (int i = 0; i < m; i++){
         cin >> u;
         cin >> v;
         cin >> w;
@@ -41,53 +34,97 @@ void loadGraph(Graph &g, int n, int m)
     }
 }
 
-bool findEdge(Graph &g, int u, int v, double &weight)
-{
-    weight = g.arr[u*g.vert + v];
-    return (weight > 0);
+bool edgeExist(Graph &g, int u, int v){
+    return g.vert[u].adjacency.count(v);
 }
 
-void showAsMatrix(Graph &g)
-{
-    double test;
-    for (int i = 0; i < g.vert; i++)
-    {
-        for (int j = 0; j < g.vert; j++)
-        {
-            test = g.arr[i*g.vert + j];
-            if (test < 0)
-            {
-                cout << '-' << ',';
+bool findEdge(Graph &g, int u, int v, double &weight){
+    if (u == v) {
+        weight = 0;
+        return true;
+    }
+    if (edgeExist(g, u, v)){
+        weight = g.vert[u].adjacency[v];
+        return true;
+    };
+    return false;
+}
+
+void showAsMatrix(Graph &g){
+    double weight;
+    bool exist;
+    for (int i = 0; i < g.verts; i++){
+
+        for (int j = 0; j < g.verts; j++){
+            exist = findEdge(g, i, j, weight);
+
+            if (exist){
+                cout << weight << ",";
             }
             else
-                cout << g.arr[i*g.vert + j] << ',';
+                cout << '-' << ',';
         }
         cout << endl;
     }
 }
 
-void showAsArrayOfLists(Graph &g)
-{
-    for (int i = 0; i < g.vert; i++)
+void showAsArrayOfLists(Graph &g){
+    for (int i = 0; i < g.verts; i++){
+        cout << i << ':';
+        for (    map<int, double>::iterator it = g.vert[i].adjacency.begin(); it != g.vert[i].adjacency.end(); it++){
+            cout << it->first << '(' << it ->second << "),";
+        }
+        cout << endl;
+    }
+}
+
+void searchDepth(Graph &g, int current, bool visited[]){
+    visited[current] = true;
+    cout << current << ",";
+
+    for(map<int, double>::iterator it = g.vert[current].adjacency.begin(); it != g.vert[current].adjacency.end(); it++)
+        if (!visited[it->first])
+            searchDepth(g, it->first, visited);
+}
+
+void DFS(Graph &g, int current){
+    bool *visited = new bool[g.verts];
+    for (int i = 0; i < g.verts; i++)
+        visited[i] = false;
+
+    searchDepth(g, current, visited);
+
+    cout << endl;
+}
+
+void BFS(Graph &g, int current){
+    bool *visited = new bool[g.verts];
+    for(int i = 0; i < g.verts; i++)
+        visited[i] = false;
+
+    list<int> queue;
+
+    visited[current] = true;
+    queue.push_back(current);
+
+    while(!queue.empty())
     {
-        cout << i << ":";
-        for (int j = 0; j < g.vert; j++)
+        current = queue.front();
+        cout << current << ",";
+        queue.pop_front();
+
+        for(map<int, double>::iterator it = g.vert[current].adjacency.begin(); it != g.vert[current].adjacency.end(); it++)
         {
-            if (g.arr[i*g.vert+j]>0)
-                cout << j << "(" << g.arr[i*g.vert+j] << "),";
+            if(!visited[it->first])
+            {
+                visited[it->first] = true;
+                queue.push_back(it->first);
+            }
         }
-        cout << endl;
     }
-
+    cout << endl;
 }
 
-void BFS(Graph &g, int s){
-
-}
-
-void DFS(Graph &g, int s){
-
-}
 
 bool isCommand(const string command,const char *mnemonic){
     return command==mnemonic;
@@ -136,16 +173,6 @@ int main(){
             continue;
         }
 
-        if(isCommand(command,"BF"))
-        {
-            BFS(graph[currentT],value);
-            continue;
-        }
-        if(isCommand(command,"DF"))
-        {
-            DFS(graph[currentT],value);
-            continue;
-        }
 
         // read next argument, one int value
         stream >> value;
@@ -191,6 +218,17 @@ int main(){
         if(isCommand(command,"GO"))
         {
             graph=new Graph[value];
+            continue;
+        }
+
+        if(isCommand(command,"BF"))
+        {
+            BFS(graph[currentT],value);
+            continue;
+        }
+        if(isCommand(command,"DF"))
+        {
+            DFS(graph[currentT],value);
             continue;
         }
 
