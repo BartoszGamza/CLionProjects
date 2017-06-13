@@ -87,33 +87,33 @@ void searchDepth(Graph &g, int current, bool visited[]){
             searchDepth(g, it->first, visited);
 }
 
-void DFS(Graph &g, int current){
+void DFS(Graph &g, int s){
     bool *visited = new bool[g.verts];
     for (int i = 0; i < g.verts; i++)
         visited[i] = false;
 
-    searchDepth(g, current, visited);
+    searchDepth(g, s, visited);
 
     cout << endl;
 }
 
-void BFS(Graph &g, int current){
+void BFS(Graph &g, int s){
     bool *visited = new bool[g.verts];
     for(int i = 0; i < g.verts; i++)
         visited[i] = false;
 
     list<int> queue;
 
-    visited[current] = true;
-    queue.push_back(current);
+    visited[s] = true;
+    queue.push_back(s);
 
     while(!queue.empty())
     {
-        current = queue.front();
-        cout << current << ",";
+        s = queue.front();
+        cout << s << ",";
         queue.pop_front();
 
-        for(map<int, double>::iterator it = g.vert[current].adjacency.begin(); it != g.vert[current].adjacency.end(); it++)
+        for(map<int, double>::iterator it = g.vert[s].adjacency.begin(); it != g.vert[s].adjacency.end(); it++)
         {
             if(!visited[it->first])
             {
@@ -125,6 +125,9 @@ void BFS(Graph &g, int current){
     cout << endl;
 }
 
+int* SSSP(Graph &g, int s){
+
+}
 
 bool isCommand(const string command,const char *mnemonic){
     return command==mnemonic;
