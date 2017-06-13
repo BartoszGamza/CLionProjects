@@ -126,7 +126,10 @@ void BFS(Graph &g, int s){
 }
 
 int* SSSP(Graph &g, int s){
+    bool *visited = new bool [g.verts];
+    for (int i =0; i< g.verts; i++){
 
+    }
 }
 
 bool isCommand(const string command,const char *mnemonic){
